@@ -19,50 +19,53 @@ public class App {
 
 		Realsecure secure = new Realsecure("", 12001, 3);
 		byte[] outByte = null;
-		String outString = null;
+		// aqui habia un string
+		byte[] outString = null;
 
 		try {
 			secure.OpenConnectionCLAN();
 
 			// Proteger Password String
 			outString = secure.protectPassword("E0ABB1827FEDDE1CC6E65D8A5F31C08E", "54FB70", "Mi Password");
-			System.out.println("password string cifrado: " + outString);
-
+			System.out.println("password string cifrado: " + String.format("%02x", new BigInteger(1, outString)));
+			
 			// Proteger password byte[]
 			byte dataByte[] = { (byte) 0x4C, (byte) 0x45, (byte) 0x4F }; // LEO
 			outByte = secure.protectPassword("E0ABB1827FEDDE1CC6E65D8A5F31C08E", "54FB70", dataByte);
-			System.out.println("password byte array cifrado: " + new String(outByte));
+			System.out.println("password byte array cifrado: " + String.format("%02x", new BigInteger(1, outByte)));
 
 			// Cifrar datos 3DES ECB String
-			outString = secure.EncryptData("2E7FD6E87508E2DF2E7FD6E87508E2DF", null, ECB, null,
+			byte[] outString1 = secure.EncryptData("2E7FD6E87508E2DF2E7FD6E87508E2DF", null, ECB, null,
 					"LEO SOLER FERNANDEZ     ");// cifrado datos ECB:
 												// 576A23F2A95706F17418FBF079975A0D6B641EE3F8105EC4
-			System.out.println("cifrado datos ECB: " + outString);
+			System.out.println("cifrado datos ECB: " + String.format("%02x", new BigInteger(1, outString1)));
 
 			// Cifrar datos 3DES CBC String
 			iv = new byte[8];
 			for (int i = 0; i < iv.length; i++)
 				iv[i] = 0;
-			outString = secure.EncryptData("2E7FD6E87508E2DF2E7FD6E87508E2DF", null, CBC, iv,
+			byte[] outString2 = secure.EncryptData("2E7FD6E87508E2DF2E7FD6E87508E2DF", null, CBC, iv,
 					"LEO SOLER FERNANDEZ     ");// cifrado datos CBC:
 												// 576A23F2A95706F14F5337117EB47ED5203F94EA0CBC3C0D
-			System.out.println("cifrado datos CBC: " + outString);
+			System.out.println("cifrado datos CBC: " + String.format("%02x", new BigInteger(1, outString2)));
 
 			// Descifrar datos String
-//			outString = secure.DecryptData("2E7FD6E87508E2DF2E7FD6E87508E2DF", null, ECB, null,
+			outString = secure.DecryptData("2E7FD6E87508E2DF2E7FD6E87508E2DF", null, ECB, null,
 //					"576A23F2A95706F17418FBF079975A0D6B641EE3F8105EC4"); // descifrado
-//																			// datos ECB:
-//																			// LEO SOLER
-//																			// FERNANDEZ
-//			System.out.println("descifrado datos ECB: " + outString);
+					outString1);
+																			// datos ECB:
+																			// LEO SOLER
+																			// FERNANDEZ
+			System.out.println("descifrado datos ECB: " + new String(outString));
 
 			// Descifrar datos String
-//			outString = secure.DecryptData("2E7FD6E87508E2DF2E7FD6E87508E2DF", null, CBC, iv,
+			outString = secure.DecryptData("2E7FD6E87508E2DF2E7FD6E87508E2DF", null, CBC, iv,
 //					"576A23F2A95706F14F5337117EB47ED5203F94EA0CBC3C0D"); // descifrado
-//																			// datos CBC:
-//																			// LEO SOLER
-//																			// FERNANDEZ
-//			System.out.println("descifrado datos CBC: " + outString);
+					outString2);
+																			// datos CBC:
+																			// LEO SOLER
+																			// FERNANDEZ
+			System.out.println("descifrado datos CBC: " + new String(outString));
 
 			// cifrar datos byte[]
 			byte dataByte1[] = { (byte) 0x4C, (byte) 0x45, (byte) 0x4F, (byte) 0x20, (byte) 0x20, (byte) 0x20,
